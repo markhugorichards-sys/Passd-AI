@@ -346,6 +346,7 @@ textarea.input { resize: vertical; min-height: 90px; }
   background: var(--surface); border: 1px solid var(--border);
   border-radius: var(--r-lg); margin-bottom: 8px;
   cursor: pointer; transition: all .2s cubic-bezier(.4,0,.2,1); overflow: hidden;
+  max-width: 100%;
 }
 .inst-row:hover { box-shadow: var(--shadow); border-color: #c4d0e6; transform: translateY(-1px); }
 .inst-row.featured { border-color: var(--blue); border-width: 1.5px; }
@@ -436,7 +437,7 @@ textarea.input { resize: vertical; min-height: 90px; }
 .price-bar.latest { background: var(--blue); }
 
 /* ─── Unlock gate ────────────────────────────────────────────────── */
-.gate-wrap { position: relative; margin-bottom: 8px; }
+.gate-wrap { position: relative; margin-bottom: 8px; overflow: hidden; }
 .gate-blur { filter: blur(4px); pointer-events: none; user-select: none; }
 .gate-panel {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
@@ -662,6 +663,23 @@ input[type=range]:active::-webkit-slider-thumb { cursor: grabbing; }
 }
 .mob-metrics-wrap { display: none; }
 @media(max-width:768px) { .mob-metrics-wrap { display: block; } }
+
+/* ─── MOBILE CARD vs DESKTOP ROW ───────────────────────────────── */
+.mob-card  { display: none; }
+.desk-row  { display: grid; }
+.col-headers-desktop { display: block; }
+@media(max-width: 768px) {
+  .mob-card  { display: block; width: 100%; }
+  .desk-row  { display: none !important; }
+  .col-headers-desktop { display: none !important; }
+  .inst-row { overflow: hidden; cursor: pointer; }
+  .mob-mn { font-size: 16px !important; }
+  .mob-mn.accent { color: var(--blue); }
+  .mob-mn.good   { color: var(--green); }
+  .mob-mn.fair   { color: var(--text-2); }
+  .mob-mn.warn   { color: var(--amber); }
+  .mob-mn.bad    { color: var(--red); }
+}
 </style>
 </head>
 <body>
@@ -1071,11 +1089,13 @@ const ComparisonPage = ({ instructors, searchParams, isGuest, onNav, onViewProfi
           <div>
             {/* Column headers */}
             {results.length > 0 && (
-              <div style={{display:'grid',gridTemplateColumns:'52px 1fr 148px 156px 148px 172px',marginBottom:8,paddingLeft:0}}>
-                <div/><div/>
-                {['Price / hr','Est. total cost','Pass rate','Value score'].map(h => (
-                  <div key={h} style={{textAlign:'center',fontSize:'var(--t-xs)',fontWeight:700,color:'var(--text-4)',textTransform:'uppercase',letterSpacing:'.06em',padding:'0 8px'}}>{h}</div>
-                ))}
+              <div className="col-headers-desktop">
+                <div style={{display:'grid',gridTemplateColumns:'52px 1fr 148px 156px 148px 172px',marginBottom:8}}>
+                  <div/><div/>
+                  {['Price / hr','Est. total cost','Pass rate','Value score'].map(h => (
+                    <div key={h} style={{textAlign:'center',fontSize:'var(--t-xs)',fontWeight:700,color:'var(--text-4)',textTransform:'uppercase',letterSpacing:'.06em',padding:'0 8px'}}>{h}</div>
+                  ))}
+                </div>
               </div>
             )}
 
