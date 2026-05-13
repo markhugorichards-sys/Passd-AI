@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /.netlify/
+Disallow: /src/
+Disallow: /node_modules/
+
+# Block all crawlers from old GitHub Pages URL
+User-agent: *
+Disallow: /Passd-AI/
+
+Sitemap: https://passd-ai.co.uk/sitemap.xml

@@ -1,0 +1,56 @@
+# netlify.toml
+# Place this at the ROOT of your GitHub repo
+
+[build]
+  publish = "."
+  command = ""
+
+[functions]
+  directory = "netlify/functions"
+
+# Redirect www to non-www — fixes "Page with redirect" in Search Console
+[[redirects]]
+  from = "https://www.passd-ai.co.uk/*"
+  to = "https://passd-ai.co.uk/:splat"
+  status = 301
+  force = true
+
+# Block GitHub Pages URL from being served via Netlify
+[[redirects]]
+  from = "https://markhugorichards-sys.github.io/*"
+  to = "https://passd-ai.co.uk/:splat"
+  status = 301
+  force = true
+
+# SPA fallback — all routes serve index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Security + SEO headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-XSS-Protection = "1; mode=block"
+
+# No cache on HTML — always fresh
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Cache robots and sitemap for 1 day
+[[headers]]
+  for = "/robots.txt"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+    Content-Type = "application/xml"
