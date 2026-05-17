@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback, Fragment, useRef, lazy, Suspense } from 'react';
+import { useState, useMemo, useEffect, useCallback, Fragment, useRef, lazy, Suspense } from 'react';import { signOut } from './lib/supabase.js';
 
 /* ── LAZY PAGE IMPORTS (split into separate chunks) ─────── */
 const Compare       = lazy(()=>import('./pages/Compare.jsx'));
@@ -12,7 +12,7 @@ const ForInstructors= lazy(()=>import('./pages/ForInstructors.jsx'));
 const Admin         = lazy(()=>import('./pages/Admin.jsx'));
 const AdminLogin    = lazy(()=>import('./pages/AdminLogin.jsx'));
 const Legal         = lazy(()=>import('./pages/Legal.jsx'));
-const LegalHub      = lazy(()=>import('./pages/LegalHub.jsx'));
+const LegalHub      = lazy(()=>import('./pages/LegalHub.jsx'));const ResetPassword = lazy(()=>import('./pages/ResetPassword.jsx'));
 
 /* ── PAGE LOADER SPINNER ─────────────────────────────────── */
 const PageLoader=()=><div style={{display:'flex',alignItems:'center',justifyContent:'center',minHeight:'60svh'}}>
@@ -35,7 +35,6 @@ const INSTS=[
   {id:8,name:'Aisha Rahman',email:'aisha@passd-ai.co.uk',post:'M13',area:'Longsight',dist:2.9,tx:['Manual','Automatic'],gender:'Female',quals:['ADI'],types:['Standard','Beginner','Intensive'],support:['ADHD Friendly','Anxious Drivers'],rate:31,passRate:88,yrs:5,rating:4.7,reviews:67,verified:true,dvsaRef:'ADI-8374629',tier:'Verified',avail:'Available',bio:'ADHD-friendly structured lessons. 88% pass rate.',avatar:'https://i.pravatar.cc/200?u=a8',history:[33,32,32,31,31],rviews:[]},
   {id:9,name:'Demo Instructor',email:'instructor@passd-ai.co.uk',post:'M2',area:'Manchester City',dist:1.8,tx:['Automatic'],gender:'Any',quals:['ADI'],types:['Standard','Refresher'],support:[],rate:33,passRate:82,yrs:5,rating:4.5,reviews:45,verified:false,dvsaRef:'',tier:'Free',avail:'Available',bio:'Demo account.',avatar:'https://i.pravatar.cc/200?u=x9',history:[34,34,33,33,33],rviews:[]},
 ];
-const LEARNERS=[{id:1,name:'Alex Doe',email:'alex@passd-ai.co.uk',emailVerified:true,postcode:'M1 1AA'}];
 const THEORY=[
   {id:'signs',name:'Road Signs',progress:65,questions:[
     {id:1,text:'What does a circular sign with a red border indicate?',opts:['Warning','Information','Orders — must not do','Direction'],correct:2,exp:'Circular signs with red borders give mandatory orders.'},
@@ -510,7 +509,7 @@ const App=()=>{
       case 'legal_terms':              return<Legal page="terms" onBack={()=>nav('legal')}/>;
       case 'legal_cookies':            return<Legal page="cookies" onBack={()=>nav('legal')}/>;
       case 'legal_instructor_agreement':return<Legal page="instructor_agreement" onBack={()=>nav('legal')}/>;
-      default:          return<Home onNav={nav} onSearch={p=>{setSp(p);nav('compare');}}/>;
+      case 'reset-password': return<ResetPassword onNav={nav}/>;default:          return<Home onNav={nav} onSearch={p=>{setSp(p);nav('compare');}}/>;
     }
   };
 
@@ -547,9 +546,9 @@ const App=()=>{
       {/* Right side — context aware */}
       <div style={{display:'flex',alignItems:'center',gap:8}}>
         {lu
-          ?<><span style={{fontSize:13,fontWeight:600,color:'#475569',maxWidth:80,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>Hi, {lu.name.split(' ')[0]}</span><button className="btn btn-gh btn-sm" onClick={()=>{setLu(null);nav('home');}}>Sign out</button></>
+          ?<><span style={{fontSize:13,fontWeight:600,color:'#475569',maxWidth:80,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>Hi, {lu.name.split(' ')[0]}</span><button className="btn btn-gh btn-sm" onClick={async()=>{await signOut();setLu(null);nav('home');}}>Sign out</button></>
           :iu
-          ?<><span style={{fontSize:13,fontWeight:600,color:'#475569'}}>Portal</span><button className="btn btn-gh btn-sm" onClick={()=>{setIu(null);nav('home');}}>Sign out</button></>
+          ?<><span style={{fontSize:13,fontWeight:600,color:'#475569'}}>Portal</span><button className="btn btn-gh btn-sm" onClick={async()=>{await signOut();setIu(null);nav('home');}}>Sign out</button></>
           :view==='home'
           ?<><button className="btn btn-gh btn-sm" onClick={()=>nav('login')}>Sign in</button><button className="btn btn-p btn-sm" onClick={()=>{setAutoScroll(n=>n+1);nav('home');}}>Compare free</button></>
           :view==='compare'||view==='profile'
@@ -612,4 +611,10 @@ const App=()=>{
 
 
 
-export default App;
+import { AuthProvider } from './lib/AuthContext.jsx';
+const AppWithAuth = () => (
+  <AuthProvider>
+    <App />
+  </AuthProvider>
+);
+export default AppWithAuth;
