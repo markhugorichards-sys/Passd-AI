@@ -168,4 +168,121 @@ const Signup = ({ onSignup, onNav }) => {
             <button type="submit" className="btn btn-p btn-full btn-lg" disabled={loading}>
               {loading ? 'Creating account…' : 'Create free account'}
             </button>
-            <p style={{ textAlign:'center',fontSize:14,color:'#47556
+            <p style={{ textAlign:'center',fontSize:14,color:'#475569' }}>
+              Already have an account?{' '}
+              <button type="button" onClick={() => onNav('login')}
+                style={{ background:'none',border:'none',color:'#1d6ff3',fontWeight:600,cursor:'pointer',fontSize:14,fontFamily:'inherit' }}>
+                Sign in
+              </button>
+            </p>
+          </form>
+        )}
+
+        {/* INSTRUCTOR STEP 1 */}
+        {isInst && step === 1 && (
+          <form onSubmit={handleInstructorStep1} style={{ display:'flex',flexDirection:'column',gap:14 }}>
+            <div style={{ background:'#f8fafc',borderRadius:10,padding:'8px 12px',fontSize:13,color:'#475569',display:'flex' }}>
+              <span>Step 1 of 2</span>
+              <span style={{ marginLeft:'auto',color:'#1d6ff3',fontWeight:600 }}>Account details</span>
+            </div>
+            <div className="field">
+              <span className="lbl">Full name</span>
+              <input className="inp" type="text" value={name}
+                onChange={e => setName(e.target.value)} placeholder="Your full name" required />
+            </div>
+            <div className="field">
+              <span className="lbl">Email address</span>
+              <input className="inp" type="email" value={email}
+                onChange={e => setEmail(e.target.value)} placeholder="you@email.com"
+                autoComplete="email" required />
+            </div>
+            <div className="field">
+              <span className="lbl">Password</span>
+              <input className="inp" type="password" value={password}
+                onChange={e => setPassword(e.target.value)} placeholder="Min. 8 characters"
+                autoComplete="new-password" required />
+            </div>
+            <div className="field">
+              <span className="lbl">Confirm password</span>
+              <input className="inp" type="password" value={confirm}
+                onChange={e => setConfirm(e.target.value)} placeholder="Repeat password" required />
+            </div>
+            {err && <p style={{ fontSize:13,color:'#dc2626',lineHeight:1.4 }}>{err}</p>}
+            <button type="submit" className="btn btn-p btn-full btn-lg">Continue →</button>
+            <p style={{ textAlign:'center',fontSize:14,color:'#475569' }}>
+              Already listed?{' '}
+              <button type="button" onClick={() => onNav('login')}
+                style={{ background:'none',border:'none',color:'#1d6ff3',fontWeight:600,cursor:'pointer',fontSize:14,fontFamily:'inherit' }}>
+                Sign in
+              </button>
+            </p>
+          </form>
+        )}
+
+        {/* INSTRUCTOR STEP 2 */}
+        {isInst && step === 2 && (
+          <form onSubmit={handleInstructorSubmit} style={{ display:'flex',flexDirection:'column',gap:14 }}>
+            <div style={{ background:'#f8fafc',borderRadius:10,padding:'8px 12px',fontSize:13,color:'#475569',display:'flex',alignItems:'center' }}>
+              <button type="button" onClick={() => setStep(1)}
+                style={{ background:'none',border:'none',color:'#1d6ff3',cursor:'pointer',fontSize:13,fontFamily:'inherit',padding:0 }}>
+                ← Back
+              </button>
+              <span style={{ marginLeft:'auto',color:'#1d6ff3',fontWeight:600 }}>Step 2 of 2 — Profile</span>
+            </div>
+            <div style={{ display:'flex',gap:10 }}>
+              <div className="field" style={{ flex:2 }}>
+                <span className="lbl">ADI / PDI number</span>
+                <input className="inp" type="text" value={adiNum}
+                  onChange={e => setAdiNum(e.target.value)} placeholder="ADI-1234567" />
+              </div>
+              <div className="field" style={{ flex:1 }}>
+                <span className="lbl">Type</span>
+                <select className="sel" value={adiType} onChange={e => setAdiType(e.target.value)}>
+                  <option>ADI</option>
+                  <option>PDI</option>
+                </select>
+              </div>
+            </div>
+            <div className="field">
+              <span className="lbl">Base postcode</span>
+              <input className="inp" type="text" value={basePC}
+                onChange={e => setBasePC(e.target.value)} placeholder="SO14 1AA" />
+            </div>
+            <div className="field">
+              <span className="lbl">Price per hour (£)</span>
+              <input className="inp" type="number" min="15" max="100" value={priceHr}
+                onChange={e => setPriceHr(e.target.value)} placeholder="35" />
+            </div>
+            <div className="field">
+              <span className="lbl">Short bio <span style={{ color:'#94a3b8',fontWeight:400 }}>(optional)</span></span>
+              <textarea className="inp" value={bio} onChange={e => setBio(e.target.value)}
+                placeholder="e.g. 8 years teaching, specialising in nervous learners. 91% first-time pass rate."
+                rows={3} style={{ resize:'vertical',minHeight:70 }} />
+            </div>
+            <label style={{ display:'flex',gap:10,alignItems:'flex-start',cursor:'pointer' }}>
+              <input type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)}
+                style={{ marginTop:3,flexShrink:0 }} />
+              <span style={{ fontSize:13,color:'#475569',lineHeight:1.5 }}>
+                I agree to the{' '}
+                <button type="button" onClick={() => onNav('legal_instructor_agreement')}
+                  style={{ background:'none',border:'none',color:'#1d6ff3',cursor:'pointer',fontSize:13,fontFamily:'inherit' }}>
+                  Instructor Listing Agreement
+                </button>
+                , confirm I hold a current DVSA ADI or PDI licence, and understand that Passd-AI charges £5 + VAT per lead after any free listing period.
+              </span>
+            </label>
+            {err && <p style={{ fontSize:13,color:'#dc2626',lineHeight:1.4 }}>{err}</p>}
+            <div style={{ background:'#eff6ff',border:'1px solid #bfdbfe',borderRadius:12,padding:'12px 16px',fontSize:13,color:'#1e40af',lineHeight:1.5 }}>
+              🎉 <strong>Free listing period:</strong> Your first listings are free while we build up local demand.
+            </div>
+            <button type="submit" className="btn btn-p btn-full btn-lg" disabled={loading}>
+              {loading ? 'Creating your listing…' : 'Submit listing for review'}
+            </button>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Signup;
